@@ -6,6 +6,7 @@
         <meta content="ie=edge" http-equiv="X-UA-Compatible" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <title>Taskr Mini</title>
+        <link href="src/style.css" rel="stylesheet">
     </head>
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
@@ -16,106 +17,114 @@
           integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
           referrerpolicy="no-referrer"
           rel="stylesheet" />
-  <body>
-  <div class="container">
-      <main class="wrapper">
-          <header>
-              <h1 class="title">Taskr Mini</h1>
-          </header>
-          <form class="form-group add-form" id="taskr_form-add">
-              <label class="label" for="inputAdd">
-                  Add a task
-              </label>
-              <div class="input-wrapper">
-                  <input aria-required="true"
-                         class="input"
-                         id="inputAdd"
-                         name="inputAdd"
-                         placeholder="What do you wanna do?"
-                         required
-                         type="text"
-                  />
-                  <button aria-label="Add task" class="btn input-btn" id="btnAdd" title="Add Task" type="submit">
-                      <i class="fas fa-plus"></i>
-                  </button>
-              </div>
-          </form>
-
-          <form class="form-group edit-form hidden" id="taskr_form-edit">
-              <label class="label" for="inputEdit">
+    <body>
+        <noscript>
+            <h1>
+                For full functionality of this site it is necessary to enable JavaScript.
+                Here are the <a href="https://www.enable-javascript.com/" rel="noopener noreferrer" target="_blank">
+                instructions how to enable JavaScript in your web browser</a>.
+            </h1>
+        </noscript>
+        <div class="container">
+            <main class="wrapper">
+                <header>
+                    <h1 class="title">Taskr Mini</h1>
+                </header>
+                <form class="form-group add-form" id="taskr_form-add">
+                    <label class="label" for="inputAdd">
+                    Add a task
+                    </label>
+                    <div class="input-wrapper">
+                        <input aria-required="true"
+                               class="input"
+                               id="inputAdd"
+                               name="inputAdd"
+                               placeholder="What do you wanna do?"
+                               required
+                               type="text"
+                        />
+                        <button aria-label="Add task" class="btn input-btn" id="btnAdd" title="Add Task" type="submit">
+                        <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </form>
+                <form class="form-group edit-form hidden" id="taskr_form-edit">
+                    <label class="label" for="inputEdit">
                     Edit a task
-              </label>
-              <div class="input-wrapper">
-                  <input aria-required="true"
-                         class="input"
-                         id="inputEdit"
-                         name="inputEdit"
-                         placeholder="Edit your task"
-                         required
-                         type="text"
-                  />
-                  <button class="btn input-btn" type="submit">
-                      <i class="fa-solid fa-check-double"></i>
-                  </button>
-              </div>
-              <button aria-label="Cancel edit" class="btn cancel-btn" id="btnCancel" title="Cancel Edit" type="button">
-                  Cancel
-              </button>
-          </form>
-
-          <div class="toolbar_wrapper" id="taskr_toolbar">
-              <form class="search-form" id="taskr_form-search">
-                  <label class="label" for="inputSearch">
-                    Search
-                  </label>
-                  <div class="input-wrapper">
-                      <div class="search-input-wrapper">
-                          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                          <input aria-required="true"
-                                 class="search-input"
-                                 id="inputSearch"
-                                 name="inputSearch"
-                                 placeholder="Search for a task"
-                                 type="text"
-                          />
-                      </div>
-                      <button aria-label="Clean search"
-                              class="btn input-btn"
-                              id="btnSearchCancel"
-                              title="Clean Search"
-                              type="button">
-                          <i class="fa-solid fa-delete-left"></i>
-                      </button>
-                  </div>
-              </form>
-              <div class="filter-container" id="taskr_toolbar-filter">
-                  <h4 class="subtitle">Filter</h4>
-                  <select aria-label="Filter" class="select select-icon" id="selectFilter" title="Filter">
-                      <option selected value="all">All</option>
-                      <option value="done">Done</option>
-                      <option value="todo">To do</option>
-                  </select>
-              </div>
-          </div>
-
-          <ul class="task-list" id="taskr_list">
-<!--              <li class="task-item" id="taskr_item">-->
-<!--                  <h3 class="task-text">I am doing something...</h3>-->
-<!--                  <div class="task-actions">-->
-<!--                      <button class="mini-btn mini-finish-btn" type="button">-->
-<!--                          <i class="fa-solid fa-check"></i>-->
-<!--                      </button>-->
-<!--                      <button class="mini-btn mini-edit-btn" type="button">-->
-<!--                          <i class="fa-solid fa-pen"></i>-->
-<!--                      </button>-->
-<!--                      <button class="mini-btn mini-remove-btn" type="button">-->
-<!--                          <i class="fa-solid fa-trash"></i>-->
-<!--                        </button>-->
-<!--                    </div>-->
-<!--                </li>-->
-            </ul>
-      </main>
-  </div>
-  <script src="/src/main.ts" type="module"></script>
-  </body>
+                    </label>
+                    <div class="input-wrapper">
+                        <input aria-required="true"
+                               class="input"
+                               id="inputEdit"
+                               name="inputEdit"
+                               placeholder="Edit your task..."
+                               required
+                               type="text"
+                        />
+                        <button aria-label="Edit task" class="btn input-btn" title="Edit Task" type="submit">
+                        <i class="fa-solid fa-check-double"></i>
+                        </button>
+                    </div>
+                    <button aria-label="Cancel edit"
+                            class="btn cancel-btn"
+                            id="btnCancel"
+                            title="Cancel Edit"
+                            type="button">
+                    Cancel
+                    </button>
+                </form>
+                <div class="toolbar_wrapper" id="taskr_toolbar">
+                    <form class="search-form" id="taskr_form-search">
+                        <label class="label" for="inputSearch">
+                        Search
+                        </label>
+                        <div class="input-wrapper">
+                            <div class="search-input-wrapper">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input aria-required="true"
+                                       class="search-input"
+                                       id="inputSearch"
+                                       name="inputSearch"
+                                       placeholder="Search for a task"
+                                       type="text"
+                                />
+                            </div>
+                            <button aria-label="Clean search"
+                                    class="btn input-btn"
+                                    id="btnSearchCancel"
+                                    title="Clean Search"
+                                    type="button">
+                            <i class="fa-solid fa-delete-left"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="filter-container" id="taskr_toolbar-filter">
+                        <h4 class="subtitle">Filter</h4>
+                        <select aria-label="Filter" class="select select-icon" id="selectFilter" title="Filter">
+                            <option selected value="all">All</option>
+                            <option value="done">Done</option>
+                            <option value="todo">To do</option>
+                        </select>
+                    </div>
+                </div>
+                <ul class="task-list" id="taskr_list">
+                <!--<li class="task-item" id="taskr_item">
+                        <h3 class="task-text">I am doing something...</h3>
+                        <div class="task-actions">
+                            <button class="mini-btn mini-finish-btn" type="button">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button class="mini-btn mini-edit-btn" type="button">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button class="mini-btn mini-remove-btn" type="button">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </li>-->
+                </ul>
+            </main>
+        </div>
+        <script src="/src/main.ts" type="module"></script>
+    </body>
 </html>
