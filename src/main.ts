@@ -1,5 +1,45 @@
 import "the-new-css-reset/css/reset.css"
 
+const DB_NAME = "taskr"
+const DB_VERSION = 1
+const DB_STORE_NAME = "tasks"
+
+let DB: IDBDatabase
+
+
+(function() {
+    const indexedDB = window.indexedDB
+    
+    console.log("Opening Db...")
+    
+    const request = indexedDB.open(DB_NAME, DB_VERSION)
+    
+    request.onsuccess = () => {
+        DB = request.result
+        console.log(`Database ${ DB_NAME } opened successfully!`)
+    }
+    
+    request.onerror = (e) => {
+        console.group("Error")
+        console.error("Error opening Database: ", DB_NAME)
+        console.error("Error: ", e)
+    }
+    
+    request.onupgradeneeded = (e) => {
+        console.log("Upgrading Database...")
+        
+        const store = (e.currentTarget as IDBOpenDBRequest).result.createObjectStore(DB_STORE_NAME, {
+            keyPath: "id",
+            autoIncrement: true,
+        })
+        
+        store.createIndex("task", "task", { unique: false })
+        store.createIndex("status", "status", { unique: false })
+        store.createIndex("createdAt", "createdAt", { unique: false })
+    }
+})()
+
+
 // Elements
 const formAdd = document.querySelector<HTMLFormElement>("#taskr_form-add") as HTMLFormElement
 const inputAdd = document.querySelector<HTMLInputElement>("#inputAdd") as HTMLInputElement
@@ -7,7 +47,7 @@ const btnAdd = document.querySelector<HTMLButtonElement>("#btnAdd") as HTMLButto
 const formEdit = document.querySelector<HTMLFormElement>("#taskr_form-edit") as HTMLFormElement
 const inputEdit = document.querySelector<HTMLInputElement>("#inputEdit") as HTMLInputElement
 const btnCancel = document.querySelector<HTMLButtonElement>("#btnCancel") as HTMLButtonElement
-const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search") as HTMLFormElement
+// const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search") as HTMLFormElement
 const inputSearch = document.querySelector<HTMLInputElement>("#inputSearch") as HTMLInputElement
 const btnSearchCancel = document.querySelector<HTMLButtonElement>("#btnSearchCancel") as HTMLButtonElement
 const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter") as HTMLSelectElement
@@ -95,6 +135,10 @@ function updateTask(inputValue: string) {
     }
 }
 
+function searchTasks(searchParam: string) {
+    // TODO: Implement search tasks
+}
+
 // Events
 formAdd.addEventListener("submit", (e) => {
     e.preventDefault()
@@ -114,6 +158,14 @@ formEdit.addEventListener("submit", (e) => {
     }
     
     showOrHideElements()
+})
+
+btnCancel.addEventListener("click", () => {
+    showOrHideElements()
+})
+
+btnSearchCancel.addEventListener("click", () => {
+    inputSearch.value = ""
 })
 
 list.addEventListener("click", (e) => {
@@ -150,6 +202,11 @@ list.addEventListener("click", (e) => {
     }
 })
 
-btnCancel.addEventListener("click", () => {
-    showOrHideElements()
+inputSearch.addEventListener("keyup", (e) => {
+    const target = e.target as HTMLInputElement
+    if (target) {
+        const searchParam = target.value.trim().toLowerCase()
+        searchTasks(searchParam)
+    }
+    
 })
