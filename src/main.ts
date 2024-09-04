@@ -23,8 +23,8 @@ const list = document.querySelector<HTMLUListElement>("#taskr_list") as HTMLULis
 function saveTask(inputValue: string) {
     const item = itemFactory(inputValue)
     list.appendChild(item)
-    
-    console.log(item)
+    inputAdd.value = ""
+    inputAdd.focus()
 }
 
 function itemFactory(inputValue: string) {
@@ -74,6 +74,10 @@ function itemActionsFactory() {
     btnRemove.appendChild(iconDelete)
     taskActions.appendChild(btnRemove)
     
+    btnDone.setAttribute("type", "button")
+    btnEdit.setAttribute("type", "button")
+    btnRemove.setAttribute("type", "button")
+    
     return taskActions
 }
 
@@ -83,5 +87,21 @@ formAdd.addEventListener("submit", (e) => {
     const inputValue = inputAdd.value.trim()
     if (inputValue) {
         saveTask(inputValue)
+    }
+})
+
+list.addEventListener("click", (e) => {
+    const targetEl = e.target as HTMLButtonElement
+    
+    if (targetEl.tagName.toLowerCase() === "i") {
+        targetEl.parentElement?.click()
+    }
+    
+    const parentEl = targetEl.parentElement as HTMLDivElement
+    
+    if (targetEl.classList.contains("mini-finish-btn")) {
+        console.log("Finish task")
+        const parentItemEl = parentEl.parentElement as HTMLLIElement
+        parentItemEl.classList.toggle("done")
     }
 })
