@@ -35,7 +35,7 @@
                          required
                          type="text"
                   />
-                  <button class="btn input-btn" id="btnAdd" type="submit">
+                  <button aria-label="Add task" class="btn input-btn" id="btnAdd" title="Add Task" type="submit">
                       <i class="fas fa-plus"></i>
                   </button>
               </div>
@@ -58,7 +58,7 @@
                       <i class="fa-solid fa-check-double"></i>
                   </button>
               </div>
-              <button class="btn cancel-btn" id="btnCancel" type="button">
+              <button aria-label="Cancel edit" class="btn cancel-btn" id="btnCancel" title="Cancel Edit" type="button">
                   Cancel
               </button>
           </form>
@@ -79,14 +79,18 @@
                                  type="text"
                           />
                       </div>
-                      <button class="btn input-btn" id="btnSearchCancel" type="button">
+                      <button aria-label="Clean search"
+                              class="btn input-btn"
+                              id="btnSearchCancel"
+                              title="Clean Search"
+                              type="button">
                           <i class="fa-solid fa-delete-left"></i>
                       </button>
                   </div>
               </form>
               <div class="filter-container" id="taskr_toolbar-filter">
                   <h4 class="subtitle">Filter</h4>
-                  <select class="select select-icon" id="selectFilter">
+                  <select aria-label="Filter" class="select select-icon" id="selectFilter" title="Filter">
                       <option selected value="all">All</option>
                       <option value="done">Done</option>
                       <option value="todo">To do</option>
