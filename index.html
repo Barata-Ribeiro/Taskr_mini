@@ -22,7 +22,7 @@
           <header>
               <h1 class="title">Taskr Mini</h1>
           </header>
-          <form class="form-group add-form" id="taskr_add">
+          <form class="form-group add-form" id="taskr_form-add">
               <label class="label" for="inputAdd">
                   Add a task
               </label>
@@ -35,12 +35,13 @@
                          required
                          type="text"
                   />
-                  <button class="btn" type="submit">
+                  <button class="btn input-btn" id="btnAdd" type="submit">
                       <i class="fas fa-plus"></i>
                   </button>
               </div>
           </form>
-          <form class="form-group edit-form" id="taskr_edit">
+
+          <form class="form-group edit-form hidden" id="taskr_form-edit">
               <label class="label" for="inputEdit">
                     Edit a task
               </label>
@@ -53,11 +54,62 @@
                          required
                          type="text"
                   />
-                  <button class="btn" type="submit">
+                  <button class="btn input-btn" type="submit">
                       <i class="fa-solid fa-check-double"></i>
                   </button>
               </div>
+              <button class="btn cancel-btn" id="btnCancel" type="button">
+                  Cancel
+              </button>
           </form>
+
+          <div class="toolbar_wrapper" id="taskr_toolbar">
+              <form class="search-form" id="taskr_form-search">
+                  <label class="label" for="inputSearch">
+                    Search
+                  </label>
+                  <div class="input-wrapper">
+                      <div class="search-input-wrapper">
+                          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                          <input aria-required="true"
+                                 class="search-input"
+                                 id="inputSearch"
+                                 name="inputSearch"
+                                 placeholder="Search for a task"
+                                 type="text"
+                          />
+                      </div>
+                      <button class="btn input-btn" id="btnSearchCancel" type="button">
+                          <i class="fa-solid fa-delete-left"></i>
+                      </button>
+                  </div>
+              </form>
+              <div class="filter-container" id="taskr_toolbar-filter">
+                  <h4 class="subtitle">Filter</h4>
+                  <select class="select select-icon" id="selectFilter">
+                      <option selected value="all">All</option>
+                      <option value="done">Done</option>
+                      <option value="todo">To do</option>
+                  </select>
+              </div>
+          </div>
+
+          <ul class="task-list" id="taskr_list">
+<!--              <li class="task-item" id="taskr_item">-->
+<!--                  <h3 class="task-text">I am doing something...</h3>-->
+<!--                  <div class="task-actions">-->
+<!--                      <button class="mini-btn mini-finish-btn" type="button">-->
+<!--                          <i class="fa-solid fa-check"></i>-->
+<!--                      </button>-->
+<!--                      <button class="mini-btn mini-edit-btn" type="button">-->
+<!--                          <i class="fa-solid fa-pen"></i>-->
+<!--                      </button>-->
+<!--                      <button class="mini-btn mini-remove-btn" type="button">-->
+<!--                          <i class="fa-solid fa-trash"></i>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </li>-->
+            </ul>
       </main>
   </div>
   <script src="/src/main.ts" type="module"></script>

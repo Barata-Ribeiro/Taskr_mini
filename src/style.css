@@ -1,5 +1,6 @@
 :root {
     --white-color: rgba(255, 255, 255, 1);
+    --dark-color: rgba(0, 0, 0, 0.9);
 }
 
 html {
@@ -39,7 +40,6 @@ body {
     position: absolute;
     max-width: 45rem;
     background-color: rgba(255, 255, 255, 0.2);
-    border: 0.1rem solid rgba(0, 0, 0, 1);
     padding: 2rem;
     border-radius: 1rem;
     backdrop-filter: blur(0.5rem) saturate(180%) contrast(80%) brightness(120%);
@@ -56,27 +56,39 @@ header .title {
     font-weight: 700;
     line-height: 1;
     text-align: center;
-    padding-bottom: 1rem;
 
+    padding-bottom: 1rem;
     border-bottom: 0.2rem solid rgba(255, 255, 255, 0.5);
 }
 
-.add-form {
+.toolbar_wrapper {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+}
+
+.add-form,
+.search-form,
+.edit-form,
+.filter-container {
+    position: relative;
     display: grid;
     gap: 1rem;
 }
 
-.edit-form {
-    display: none;
-    gap: 1rem;
+.filter-container {
+    width: 100%;
+    border-left: 0.2rem solid rgba(255, 255, 255, 0.5);
+    padding-left: 1rem;
 }
 
-.form-group .add-form {
+.form-group {
     padding-bottom: 2rem;
+    margin-bottom: 2rem;
     border-bottom: 0.2rem solid rgba(255, 255, 255, 0.5);
 }
 
-.label {
+.label, .subtitle {
     cursor: default;
     font-size: 1.8rem;
     line-height: 1;
@@ -86,27 +98,108 @@ header .title {
 .input-wrapper {
     display: flex;
     align-items: center;
+    box-shadow: 0 4px 10px -4px rgba(0, 0, 0, 0.4);
+    border-radius: 1rem;
 }
 
 .input {
     width: 100%;
     outline: none;
-    border: 1px solid var(--white-color);
     padding: 1rem;
     font-size: 1.6rem;
     border-radius: 1rem 0 0 1rem;
     color: rgba(0, 0, 0, 0.9);
     background-color: var(--white-color);
-    box-shadow: 0 4px 10px -4px rgba(0, 0, 0, 0.4);
     transition: .3s ease;
 }
 
-.input:focus {
+.input:focus,
+.search-input:focus {
     background-color: rgba(255, 255, 255, 0.8);
 }
 
-.input::placeholder {
+.input::placeholder,
+.search-input::placeholder {
     color: rgba(0, 0, 0, 0.3);
+}
+
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.select {
+    display: inline-block;
+    min-width: 12rem;
+    width: 100%;
+    outline: none;
+    border: 1px solid var(--white-color);
+    padding: 1rem;
+    font-size: 1.6rem;
+    border-radius: 1rem;
+    color: rgba(0, 0, 0, 0.9);
+    background-color: var(--white-color);
+    box-shadow: 0 4px 10px -4px rgba(0, 0, 0, 0.4);
+    transition: .3s ease;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
+.select.select-icon {
+    background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%),
+    linear-gradient(to right, #ccc, #ccc);
+    background-position: calc(100% - 2rem) calc(1em + 0.2rem),
+    calc(100% - 1.5rem) calc(1em + 0.2rem),
+    calc(100% - 2.5em) 0.5em;
+    background-size: 0.5rem 0.5rem,
+    0.5rem 0.5rem,
+    1px 1.5em;
+    background-repeat: no-repeat;
+    transition: none;
+}
+
+.select.select-icon:focus {
+    background-image: linear-gradient(45deg, var(--dark-color) 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, var(--dark-color) 50%),
+    linear-gradient(to right, #ccc, #ccc);
+    background-position: calc(100% - 1.5rem) 1em,
+    calc(100% - 2rem) 1em,
+    calc(100% - 2.5em) 0.5em;
+    background-size: 0.5rem 0.5rem,
+    0.5rem 0.5rem,
+    1px 1.5em;
+    background-repeat: no-repeat;
+    border-color: var(--dark-color);
+    outline: 0;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 1.5rem;
+    transform: translateY(-50%);
+    font-size: 1.6rem;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.search-input {
+    width: 100%;
+    outline: none;
+    padding: 1rem 1rem 1rem 4rem;
+    font-size: 1.6rem;
+    border-radius: 1rem 0 0 1rem;
+    color: rgba(0, 0, 0, 0.9);
+    background-color: var(--white-color);
+    transition: .3s ease;
 }
 
 .btn {
@@ -119,8 +212,15 @@ header .title {
     padding: 1rem 1.5rem;
     color: rgba(0, 0, 0, 0.9);
     background-color: var(--white-color);
-    border: 1px solid var(--white-color);
+}
+
+.btn.input-btn {
     border-radius: 0 1rem 1rem 0;
+}
+
+.btn.cancel-btn {
+    font-weight: 500;
+    border-radius: 1rem;
 }
 
 .btn:hover {
@@ -131,4 +231,80 @@ header .title {
 .btn:active {
     border-color: rgba(255, 255, 255, 0.8);
     background-color: rgba(255, 255, 255, 0.8);
+}
+
+.task-list {
+    display: grid;
+    gap: 1rem;
+    border-top: 0.2rem solid rgba(255, 255, 255, 0.5);
+    padding-top: 2rem;
+    margin-top: 2rem;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.task-text {
+    font-size: 1.8rem;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.task-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.mini-btn {
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+    width: max-content;
+    height: max-content;
+
+    padding: 0.3rem 0.8rem;
+    color: rgba(0, 0, 0, 0.9);
+    background-color: var(--white-color);
+    border-radius: 1rem;
+}
+
+.mini-btn:hover {
+    border-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.mini-btn:active {
+    border-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.done {
+    text-decoration: line-through;
+    color: rgba(0, 0, 0, 0.5);
+    font-style: italic;
+}
+
+@media screen and (max-width: 768px) {
+    .toolbar_wrapper {
+        gap: 2rem;
+        grid-template-columns: 1fr;
+    }
+
+    .filter-container {
+        border-left: none;
+        padding-left: 0;
+        border-bottom: 0.2rem solid rgba(255, 255, 255, 0.5);
+        padding-bottom: 2rem;
+    }
 }
