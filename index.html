@@ -1,17 +1,65 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link href="" rel="icon" type="image/svg+xml" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Taskr Mini</title>
-  </head>
-<link href="https://fonts.googleapis.com" rel="preconnect">
-<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet">
+    <head>
+        <meta charset="UTF-8" />
+        <link href="" rel="icon" type="image/svg+xml" />
+        <meta content="ie=edge" http-equiv="X-UA-Compatible" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Taskr Mini</title>
+    </head>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+          rel="stylesheet">
+    <link crossorigin="anonymous"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          referrerpolicy="no-referrer"
+          rel="stylesheet" />
   <body>
-    <h1>Hello world!</h1>
-    <script src="/src/main.ts" type="module"></script>
+  <div class="container">
+      <main class="wrapper">
+          <header>
+              <h1 class="title">Taskr Mini</h1>
+          </header>
+          <form class="form-group add-form" id="taskr_add">
+              <label class="label" for="inputAdd">
+                  Add a task
+              </label>
+              <div class="input-wrapper">
+                  <input aria-required="true"
+                         class="input"
+                         id="inputAdd"
+                         name="inputAdd"
+                         placeholder="What do you wanna do?"
+                         required
+                         type="text"
+                  />
+                  <button class="btn" type="submit">
+                      <i class="fas fa-plus"></i>
+                  </button>
+              </div>
+          </form>
+          <form class="form-group edit-form" id="taskr_edit">
+              <label class="label" for="inputEdit">
+                    Edit a task
+              </label>
+              <div class="input-wrapper">
+                  <input aria-required="true"
+                         class="input"
+                         id="inputEdit"
+                         name="inputEdit"
+                         placeholder="Edit your task"
+                         required
+                         type="text"
+                  />
+                  <button class="btn" type="submit">
+                      <i class="fa-solid fa-check-double"></i>
+                  </button>
+              </div>
+          </form>
+      </main>
+  </div>
+  <script src="/src/main.ts" type="module"></script>
   </body>
 </html>
