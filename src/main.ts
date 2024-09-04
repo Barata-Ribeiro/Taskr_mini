@@ -4,18 +4,16 @@ import "the-new-css-reset/css/reset.css"
 const formAdd = document.querySelector<HTMLFormElement>("#taskr_form-add") as HTMLFormElement
 const inputAdd = document.querySelector<HTMLInputElement>("#inputAdd") as HTMLInputElement
 const btnAdd = document.querySelector<HTMLButtonElement>("#btnAdd") as HTMLButtonElement
-
 const formEdit = document.querySelector<HTMLFormElement>("#taskr_form-edit") as HTMLFormElement
 const inputEdit = document.querySelector<HTMLInputElement>("#inputEdit") as HTMLInputElement
 const btnCancel = document.querySelector<HTMLButtonElement>("#btnCancel") as HTMLButtonElement
-
 const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search") as HTMLFormElement
 const inputSearch = document.querySelector<HTMLInputElement>("#inputSearch") as HTMLInputElement
 const btnSearchCancel = document.querySelector<HTMLButtonElement>("#btnSearchCancel") as HTMLButtonElement
-
 const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter") as HTMLSelectElement
-
 const list = document.querySelector<HTMLUListElement>("#taskr_list") as HTMLUListElement
+
+let formerInputValue: string
 
 // Fns
 function saveTask(inputValue: string) {
@@ -85,6 +83,18 @@ function showOrHideElements() {
     list.classList.toggle("hidden")
 }
 
+function updateTask(inputValue: string) {
+    const tasks = document.querySelectorAll(".task-item")
+    
+    for (const task of tasks) {
+        let taskText = task.querySelector(".task-text") as HTMLHeadingElement
+        
+        if (taskText.textContent === formerInputValue) {
+            taskText.textContent = inputValue
+        }
+    }
+}
+
 // Events
 formAdd.addEventListener("submit", (e) => {
     e.preventDefault()
@@ -92,6 +102,18 @@ formAdd.addEventListener("submit", (e) => {
     if (inputValue) {
         saveTask(inputValue)
     }
+})
+
+formEdit.addEventListener("submit", (e) => {
+    e.preventDefault()
+    
+    const inputValue = inputEdit.value.trim()
+    
+    if (inputValue) {
+        updateTask(inputValue)
+    }
+    
+    showOrHideElements()
 })
 
 list.addEventListener("click", (e) => {
@@ -117,6 +139,9 @@ list.addEventListener("click", (e) => {
     
     if (targetEl.classList.contains("mini-edit-btn")) {
         showOrHideElements()
+        
+        inputEdit.value = parentItemEl.querySelector(".task-text")?.textContent as string
+        formerInputValue = inputEdit.value
     }
     
     if (targetEl.classList.contains("mini-remove-btn")) {
