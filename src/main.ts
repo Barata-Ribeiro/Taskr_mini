@@ -1,5 +1,4 @@
 import "the-new-css-reset/css/reset.css"
-import "./style.css"
 
 // Elements
 const formAdd = document.querySelector<HTMLFormElement>("#taskr_form-add") as HTMLFormElement
@@ -19,7 +18,6 @@ const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter") 
 const list = document.querySelector<HTMLUListElement>("#taskr_list") as HTMLUListElement
 
 // Fns
-
 function saveTask(inputValue: string) {
     const item = itemFactory(inputValue)
     list.appendChild(item)
@@ -81,6 +79,12 @@ function itemActionsFactory() {
     return taskActions
 }
 
+function showOrHideElements() {
+    formEdit.classList.toggle("hidden")
+    formAdd.classList.toggle("hidden")
+    list.classList.toggle("hidden")
+}
+
 // Events
 formAdd.addEventListener("submit", (e) => {
     e.preventDefault()
@@ -92,16 +96,35 @@ formAdd.addEventListener("submit", (e) => {
 
 list.addEventListener("click", (e) => {
     const targetEl = e.target as HTMLButtonElement
+    let taskId: string
     
     if (targetEl.tagName.toLowerCase() === "i") {
         targetEl.parentElement?.click()
     }
     
     const parentEl = targetEl.parentElement as HTMLDivElement
+    const parentItemEl = parentEl.parentElement as HTMLLIElement
+    
+    if (parentItemEl?.classList.contains("task-item")) {
+        taskId = parentItemEl.id
+        console.log("Task ID: ", taskId)
+    }
     
     if (targetEl.classList.contains("mini-finish-btn")) {
-        console.log("Finish task")
         const parentItemEl = parentEl.parentElement as HTMLLIElement
         parentItemEl.classList.toggle("done")
     }
+    
+    if (targetEl.classList.contains("mini-edit-btn")) {
+        showOrHideElements()
+    }
+    
+    if (targetEl.classList.contains("mini-remove-btn")) {
+        const parentItemEl = parentEl.parentElement as HTMLLIElement
+        parentItemEl.remove()
+    }
+})
+
+btnCancel.addEventListener("click", () => {
+    showOrHideElements()
 })
