@@ -20,6 +20,19 @@ export default defineConfig({
                                             main: resolve(__dirname, "index.html"),
                                         },
                                     },
+                                    minify: "terser",
+                                    terserOptions: {
+                                        maxWorkers: 1,
+                                        ecma: 5,
+                                        enclose: false,
+                                        keep_classnames: false,
+                                        keep_fnames: false,
+                                        ie8: true,
+                                        module: true,
+                                        safari10: true,
+                                        toplevel: true,
+                                    },
+                                    
                                 },
                                 plugins: [ dts({ rollupTypes: true }) ],
                             })
