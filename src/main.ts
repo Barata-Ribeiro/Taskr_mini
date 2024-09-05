@@ -61,6 +61,26 @@ let DB: IDBDatabase
         return tx.objectStore(storeName)
     }
     
+    function fetchAndRenderTasks() {
+        const store = getObjectStore(DB_STORE_NAME, "readonly")
+        const request = store.getAll()
+        
+        request.onsuccess = () => {
+            const tasks = request.result
+            
+            for (const task of tasks) {
+                const item = itemFactory(task.task)
+                list.appendChild(item)
+            }
+        }
+        
+        request.onerror = (e) => {
+            console.group("Error")
+            console.error("Error fetching tasks")
+            console.error("Error: ", e)
+        }
+    }
+    
     function saveTask(inputValue: string) {
         const store = getObjectStore(DB_STORE_NAME, "readwrite")
         let request: IDBRequest
@@ -244,4 +264,10 @@ let DB: IDBDatabase
         }
         
     })
+    
+    request.onsuccess = () => {
+        DB = request.result
+        console.log(`Database ${ DB_NAME } opened successfully!`)
+        fetchAndRenderTasks()
+    }
 })()
