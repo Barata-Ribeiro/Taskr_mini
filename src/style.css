@@ -304,7 +304,12 @@ header .title {
     .filter-container {
         border-left: none;
         padding-left: 0;
-        border-bottom: 0.2rem solid rgba(255, 255, 255, 0.5);
-        padding-bottom: 2rem;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .wrapper {
+        width: 100%;
+        border-radius: 0;
     }
 }
