@@ -205,7 +205,11 @@ let DB: IDBDatabase
         }
         
         if (targetEl.classList.contains("mini-remove-btn")) {
-            parentItemEl.remove()
+            const store = getObjectStore(DB_STORE_NAME, "readwrite")
+            const request = store.delete(taskId)
+            
+            request.onsuccess = () => parentItemEl.remove()
+            request.onerror = (e) => console.error("Error deleting task: ", e)
         }
     })
     
