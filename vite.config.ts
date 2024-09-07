@@ -1,8 +1,9 @@
-import camelCase        from "camelcase"
-import { resolve }      from "node:path"
-import { defineConfig } from "vite"
-import dts              from "vite-plugin-dts"
-import packageJson      from "./package.json"
+import camelCase            from "camelcase"
+import { resolve }          from "node:path"
+import { defineConfig }     from "vite"
+import dts                  from "vite-plugin-dts"
+import packageJson          from "./package.json"
+import { htmlMinifyPlugin } from "./src/html-minify-plugin"
 
 const packageName = packageJson.name.split("/").pop() ?? packageJson.name
 
@@ -34,5 +35,5 @@ export default defineConfig({
                                     },
                                     
                                 },
-                                plugins: [ dts({ rollupTypes: true }) ],
+                                plugins: [ dts({ rollupTypes: true }), htmlMinifyPlugin() ],
                             })
