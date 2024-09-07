@@ -1,8 +1,15 @@
 import "the-new-css-reset/css/reset.css"
 
+interface Task {
+    id: string
+    task: string
+    status: string
+    createdAt: string
+}
+
 const DB_NAME = "taskr"
-const DB_VERSION = 2
-const DB_STORE_NAME = "tasks"
+const DB_VERSION = 1
+const DB_STORE_NAME = "tb_tasks"
 
 let DB: IDBDatabase
 
@@ -30,7 +37,6 @@ let DB: IDBDatabase
         
         const store = (e.currentTarget as IDBOpenDBRequest).result.createObjectStore(DB_STORE_NAME, {
             keyPath: "id",
-            autoIncrement: true,
         })
         
         store.createIndex("id", "id", { unique: true })
@@ -38,24 +44,24 @@ let DB: IDBDatabase
         store.createIndex("status", "status", { unique: false })
         store.createIndex("createdAt", "createdAt", { unique: false })
     }
-
-
-// Elements
+    
+    
+    // Elements
     const formAdd = document.querySelector<HTMLFormElement>("#taskr_form-add") as HTMLFormElement
     const inputAdd = document.querySelector<HTMLInputElement>("#inputAdd") as HTMLInputElement
-    const btnAdd = document.querySelector<HTMLButtonElement>("#btnAdd") as HTMLButtonElement
+    // const btnAdd = document.querySelector<HTMLButtonElement>("#btnAdd") as HTMLButtonElement
     const formEdit = document.querySelector<HTMLFormElement>("#taskr_form-edit") as HTMLFormElement
     const inputEdit = document.querySelector<HTMLInputElement>("#inputEdit") as HTMLInputElement
     const btnCancel = document.querySelector<HTMLButtonElement>("#btnCancel") as HTMLButtonElement
-// const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search") as HTMLFormElement
+    // const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search") as HTMLFormElement
     const inputSearch = document.querySelector<HTMLInputElement>("#inputSearch") as HTMLInputElement
     const btnSearchCancel = document.querySelector<HTMLButtonElement>("#btnSearchCancel") as HTMLButtonElement
-    const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter") as HTMLSelectElement
+    // const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter") as HTMLSelectElement
     const list = document.querySelector<HTMLUListElement>("#taskr_list") as HTMLUListElement
     
-    let formerInputValue: string
-
-// Fns
+    let editingTaskId: string
+    
+    // Fns
     function getObjectStore(storeName: string, mode: IDBTransactionMode) {
         const tx = DB.transaction(storeName, mode)
         return tx.objectStore(storeName)
@@ -85,17 +91,11 @@ let DB: IDBDatabase
         const store = getObjectStore(DB_STORE_NAME, "readwrite")
         let request: IDBRequest
         
-        const item = itemFactory(inputValue)
-        list.appendChild(item)
-        
-        const timestamp = +item.id.split("_")[2]
-        if (isNaN(timestamp)) {
-            console.error("Invalid timestamp: ", timestamp)
-            return
-        }
+        const timestamp = Date.now()
+        const taskId = "taskr_item_" + timestamp
         
         const taskObj = {
-            id: item.id,
+            id: taskId,
             task: inputValue,
             status: "pending",
             createdAt: new Date(timestamp).toISOString(),
@@ -105,6 +105,9 @@ let DB: IDBDatabase
         
         request.onsuccess = () => {
             console.log("Task added successfully!")
+            
+            const item = itemFactory(taskObj)
+            list.appendChild(item)
         }
         
         request.onerror = (e) => {
@@ -117,14 +120,14 @@ let DB: IDBDatabase
         inputAdd.focus()
     }
     
-    function itemFactory(inputValue: string) {
+    function itemFactory(taskObj: Task) {
         const item = document.createElement("li")
         item.setAttribute("class", "task-item")
-        item.id = `taskr_item_${ Date.now() }`
+        item.id = taskObj.id
         
         const taskTitle = document.createElement("h3")
         taskTitle.setAttribute("class", "task-text")
-        taskTitle.textContent = inputValue
+        taskTitle.textContent = taskObj.task
         item.appendChild(taskTitle)
         
         const taskActions = itemActionsFactory()
@@ -178,22 +181,15 @@ let DB: IDBDatabase
     }
     
     function updateTask(inputValue: string) {
-        const tasks = document.querySelectorAll(".task-item")
-        
-        for (const task of tasks) {
-            let taskText = task.querySelector(".task-text") as HTMLHeadingElement
-            
-            if (taskText.textContent === formerInputValue) {
-                taskText.textContent = inputValue
-            }
-        }
+    
     }
     
     function searchTasks(searchParam: string) {
         // TODO: Implement search tasks
+        console.log("Search Param: ", searchParam)
     }
-
-// Events
+    
+    // Events
     formAdd.addEventListener("submit", (e) => {
         e.preventDefault()
         const inputValue = inputAdd.value.trim()
@@ -235,7 +231,11 @@ let DB: IDBDatabase
         
         if (parentItemEl?.classList.contains("task-item")) {
             taskId = parentItemEl.id
-            console.log("Task ID: ", taskId)
+            
+            if (!taskId) {
+                console.error("Invalid task id: ", taskId)
+                return
+            }
         }
         
         if (targetEl.classList.contains("mini-finish-btn")) {
@@ -247,7 +247,11 @@ let DB: IDBDatabase
             showOrHideElements()
             
             inputEdit.value = parentItemEl.querySelector(".task-text")?.textContent as string
-            formerInputValue = inputEdit.value
+            editingTaskId = parentItemEl.id
+            
+            console.log("Editing Task Id: ", editingTaskId)
+            
+            inputEdit.focus()
         }
         
         if (targetEl.classList.contains("mini-remove-btn")) {
