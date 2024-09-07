@@ -124,6 +124,7 @@ let DB: IDBDatabase
         const item = document.createElement("li")
         item.setAttribute("class", "task-item")
         item.id = taskObj.id
+        taskObj.status === "done" && item.classList.add("done")
         
         const taskTitle = document.createElement("h3")
         taskTitle.setAttribute("class", "task-text")
@@ -277,6 +278,44 @@ let DB: IDBDatabase
         if (targetEl.classList.contains("mini-finish-btn")) {
             const parentItemEl = parentEl.parentElement as HTMLLIElement
             parentItemEl.classList.toggle("done")
+            
+            taskId = parentItemEl.id
+            
+            const store = getObjectStore(DB_STORE_NAME, "readwrite")
+            const request = store.get(taskId)
+            
+            request.onsuccess = () => {
+                const task = request.result
+                
+                if (!task) {
+                    console.group("Error")
+                    console.error("Task not found: ", taskId)
+                    console.error("Error: ", e)
+                    console.groupEnd()
+                    return
+                }
+                
+                task.status = task.status === "pending" ? "done" : "pending"
+                
+                const updateRequest = store.put(task)
+                
+                updateRequest.onsuccess = () => {
+                    console.log("Task updated successfully!")
+                }
+                
+                updateRequest.onerror = (e) => {
+                    console.group("Error")
+                    console.error("Error updating task: ", taskId)
+                    console.error("Error: ", e)
+                }
+            }
+            
+            request.onerror = (e) => {
+                console.group("Error")
+                console.error("Error fetching task: ", taskId)
+                console.error("Error: ", e)
+                console.groupEnd()
+            }
         }
         
         if (targetEl.classList.contains("mini-edit-btn")) {
