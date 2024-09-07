@@ -19,10 +19,12 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/html-minifier-terser": "^7.0.2",
     "@types/node": "^22.5.4",
     "autoprefixer": "^10.4.20",
     "camelcase": "^8.0.0",
     "cssnano": "^7.0.6",
+    "html-minifier-terser": "^7.2.0",
     "postcss": "^8.4.45",
     "postcss-nesting": "^13.0.0",
     "prettier": "^3.3.3",
