@@ -75,7 +75,7 @@ let DB: IDBDatabase
             const tasks = request.result
             
             for (const task of tasks) {
-                const item = itemFactory(task.task)
+                const item = itemFactory(task)
                 list.appendChild(item)
             }
         }
@@ -181,7 +181,43 @@ let DB: IDBDatabase
     }
     
     function updateTask(inputValue: string) {
-    
+        const store = getObjectStore(DB_STORE_NAME, "readwrite")
+        const request = store.get(editingTaskId)
+        
+        request.onsuccess = (e) => {
+            const result = request.result
+            
+            if (!result) {
+                console.group("Error")
+                console.error("Task not found: ", editingTaskId)
+                console.error("Error: ", e)
+                console.groupEnd()
+                
+                return
+            }
+            
+            result.task = inputValue
+            
+            const updateRequest = store.put(result)
+            
+            updateRequest.onsuccess = () => {
+                console.log("Task updated successfully!")
+                
+                const taskItem = document.getElementById(editingTaskId) as HTMLLIElement
+                if (taskItem) {
+                    const taskText = taskItem.querySelector(".task-text") as HTMLHeadingElement
+                    taskText.textContent = inputValue
+                }
+                
+                inputEdit.value = ""
+            }
+            
+            updateRequest.onerror = (e) => {
+                console.group("Error")
+                console.error("Error updating task: ", inputValue)
+                console.error("Error: ", e)
+            }
+        }
     }
     
     function searchTasks(searchParam: string) {
