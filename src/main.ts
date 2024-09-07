@@ -10,61 +10,45 @@ interface Task {
 const DB_NAME = "taskr"
 const DB_VERSION = 1
 const DB_STORE_NAME = "tb_tasks"
-
 let DB: IDBDatabase
-
 
 (function() {
     const indexedDB = window.indexedDB
-    
-    console.log("Opening Db...")
-    
     const request = indexedDB.open(DB_NAME, DB_VERSION)
     
     request.onsuccess = () => {
         DB = request.result
-        console.log(`Database ${ DB_NAME } opened successfully!`)
+        fetchAndRenderTasks()
     }
     
-    request.onerror = (e) => {
-        console.group("Error")
-        console.error("Error opening Database: ", DB_NAME)
-        console.error("Error: ", e)
-    }
+    request.onerror = (e) => console.error("Error opening Database: ", e)
     
     request.onupgradeneeded = (e) => {
-        console.log("Upgrading Database...")
-        
-        const store = (e.currentTarget as IDBOpenDBRequest).result.createObjectStore(DB_STORE_NAME, {
-            keyPath: "id",
-        })
-        
+        const store = (e.currentTarget as IDBOpenDBRequest).result.createObjectStore(DB_STORE_NAME, { keyPath: "id" })
         store.createIndex("id", "id", { unique: true })
         store.createIndex("task", "task", { unique: false })
         store.createIndex("status", "status", { unique: false })
         store.createIndex("createdAt", "createdAt", { unique: false })
     }
     
-    
-    // Elements
-    const formAdd = document.querySelector<HTMLFormElement>("#taskr_form-add") as HTMLFormElement
-    const inputAdd = document.querySelector<HTMLInputElement>("#inputAdd") as HTMLInputElement
-    // const btnAdd = document.querySelector<HTMLButtonElement>("#btnAdd") as HTMLButtonElement
-    const formEdit = document.querySelector<HTMLFormElement>("#taskr_form-edit") as HTMLFormElement
-    const inputEdit = document.querySelector<HTMLInputElement>("#inputEdit") as HTMLInputElement
-    const btnCancel = document.querySelector<HTMLButtonElement>("#btnCancel") as HTMLButtonElement
-    // const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search") as HTMLFormElement
-    const inputSearch = document.querySelector<HTMLInputElement>("#inputSearch") as HTMLInputElement
-    const btnSearchCancel = document.querySelector<HTMLButtonElement>("#btnSearchCancel") as HTMLButtonElement
-    // const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter") as HTMLSelectElement
-    const list = document.querySelector<HTMLUListElement>("#taskr_list") as HTMLUListElement
+    /* DOM Elements */
+    const formAdd = document.querySelector<HTMLFormElement>("#taskr_form-add")!
+    const inputAdd = document.querySelector<HTMLInputElement>("#inputAdd")!
+    // const btnAdd = document.querySelector<HTMLButtonElement>("#btnAdd")!
+    const formEdit = document.querySelector<HTMLFormElement>("#taskr_form-edit")!
+    const inputEdit = document.querySelector<HTMLInputElement>("#inputEdit")!
+    const btnCancel = document.querySelector<HTMLButtonElement>("#btnCancel")!
+    // const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search")!
+    const inputSearch = document.querySelector<HTMLInputElement>("#inputSearch")!
+    const btnSearchCancel = document.querySelector<HTMLButtonElement>("#btnSearchCancel")!
+    // const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter")!
+    const list = document.querySelector<HTMLUListElement>("#taskr_list")!
     
     let editingTaskId: string
     
-    // Fns
+    /* Functions */
     function getObjectStore(storeName: string, mode: IDBTransactionMode) {
-        const tx = DB.transaction(storeName, mode)
-        return tx.objectStore(storeName)
+        return DB.transaction(storeName, mode).objectStore(storeName)
     }
     
     function fetchAndRenderTasks() {
@@ -72,49 +56,26 @@ let DB: IDBDatabase
         const request = store.getAll()
         
         request.onsuccess = () => {
-            const tasks = request.result
-            
-            for (const task of tasks) {
-                const item = itemFactory(task)
-                list.appendChild(item)
-            }
+            request.result.forEach((task: Task) => list.appendChild(itemFactory(task)))
         }
         
-        request.onerror = (e) => {
-            console.group("Error")
-            console.error("Error fetching tasks")
-            console.error("Error: ", e)
-        }
+        request.onerror = (e) => console.error("Error fetching tasks: ", e)
     }
     
     function saveTask(inputValue: string) {
         const store = getObjectStore(DB_STORE_NAME, "readwrite")
-        let request: IDBRequest
         
-        const timestamp = Date.now()
-        const taskId = "taskr_item_" + timestamp
-        
-        const taskObj = {
-            id: taskId,
+        const taskObj: Task = {
+            id: "taskr_item_" + Date.now(),
             task: inputValue,
             status: "pending",
-            createdAt: new Date(timestamp).toISOString(),
+            createdAt: new Date().toISOString(),
         }
         
-        request = store.add(taskObj)
+        const request = store.add(taskObj)
         
-        request.onsuccess = () => {
-            console.log("Task added successfully!")
-            
-            const item = itemFactory(taskObj)
-            list.appendChild(item)
-        }
-        
-        request.onerror = (e) => {
-            console.group("Error")
-            console.error("Error adding task: ", inputValue)
-            console.error("Error: ", e)
-        }
+        request.onsuccess = () => list.appendChild(itemFactory(taskObj))
+        request.onerror = (e) => console.error("Error adding task: ", e)
         
         inputAdd.value = ""
         inputAdd.focus()
@@ -122,57 +83,43 @@ let DB: IDBDatabase
     
     function itemFactory(taskObj: Task) {
         const item = document.createElement("li")
-        item.setAttribute("class", "task-item")
+        item.className = "task-item"
         item.id = taskObj.id
-        taskObj.status === "done" && item.classList.add("done")
+        if (taskObj.status === "done") item.classList.add("done")
         
         const taskTitle = document.createElement("h3")
-        taskTitle.setAttribute("class", "task-text")
+        taskTitle.className = "task-text"
         taskTitle.textContent = taskObj.task
         item.appendChild(taskTitle)
         
-        const taskActions = itemActionsFactory()
-        item.appendChild(taskActions)
-        
+        item.appendChild(itemActionsFactory())
         return item
     }
     
     function itemActionsFactory() {
         const taskActions = document.createElement("div")
-        taskActions.setAttribute("class", "task-actions")
+        taskActions.className = "task-actions"
         
-        const btnDone = document.createElement("button")
-        btnDone.setAttribute("class", "mini-btn mini-finish-btn")
-        btnDone.setAttribute("title", "Finish task")
-        btnDone.setAttribute("aria-label", "Finish task")
-        const iconAdd = document.createElement("i")
-        iconAdd.setAttribute("class", "fa-solid fa-check")
-        btnDone.appendChild(iconAdd)
-        taskActions.appendChild(btnDone)
+        const btnDone = createButton("mini-btn mini-finish-btn", "Finish task", "fa-solid fa-check")
+        const btnEdit = createButton("mini-btn mini-edit-btn", "Edit task", "fa-solid fa-pen")
+        const btnRemove = createButton("mini-btn mini-remove-btn", "Remove task", "fa-solid fa-trash")
         
-        const btnEdit = document.createElement("button")
-        btnEdit.setAttribute("class", "mini-btn mini-edit-btn")
-        btnEdit.setAttribute("title", "Edit task")
-        btnEdit.setAttribute("aria-label", "Edit task")
-        const iconEdit = document.createElement("i")
-        iconEdit.setAttribute("class", "fa-solid fa-pen")
-        btnEdit.appendChild(iconEdit)
-        taskActions.appendChild(btnEdit)
-        
-        const btnRemove = document.createElement("button")
-        btnRemove.setAttribute("class", "mini-btn mini-remove-btn")
-        btnRemove.setAttribute("title", "Remove task")
-        btnRemove.setAttribute("aria-label", "Remove task")
-        const iconDelete = document.createElement("i")
-        iconDelete.setAttribute("class", "fa-solid fa-trash")
-        btnRemove.appendChild(iconDelete)
-        taskActions.appendChild(btnRemove)
-        
-        btnDone.setAttribute("type", "button")
-        btnEdit.setAttribute("type", "button")
-        btnRemove.setAttribute("type", "button")
-        
+        taskActions.append(btnDone, btnEdit, btnRemove)
         return taskActions
+    }
+    
+    function createButton(btnClass: string, title: string, iconClass: string) {
+        const btn = document.createElement("button")
+        btn.className = btnClass
+        btn.title = title
+        btn.ariaLabel = title
+        btn.type = "button"
+        
+        const icon = document.createElement("i")
+        icon.className = iconClass
+        btn.appendChild(icon)
+        
+        return btn
     }
     
     function showOrHideElements() {
@@ -185,168 +132,85 @@ let DB: IDBDatabase
         const store = getObjectStore(DB_STORE_NAME, "readwrite")
         const request = store.get(editingTaskId)
         
-        request.onsuccess = (e) => {
+        request.onsuccess = () => {
             const result = request.result
-            
-            if (!result) {
-                console.group("Error")
-                console.error("Task not found: ", editingTaskId)
-                console.error("Error: ", e)
-                console.groupEnd()
-                
-                return
-            }
+            if (!result) return console.error("Task not found: ", editingTaskId)
             
             result.task = inputValue
-            
             const updateRequest = store.put(result)
             
             updateRequest.onsuccess = () => {
-                console.log("Task updated successfully!")
-                
                 const taskItem = document.getElementById(editingTaskId) as HTMLLIElement
-                if (taskItem) {
-                    const taskText = taskItem.querySelector(".task-text") as HTMLHeadingElement
-                    taskText.textContent = inputValue
-                }
-                
+                if (taskItem) taskItem.querySelector(".task-text")!.textContent = inputValue
                 inputEdit.value = ""
             }
             
-            updateRequest.onerror = (e) => {
-                console.group("Error")
-                console.error("Error updating task: ", inputValue)
-                console.error("Error: ", e)
-            }
+            updateRequest.onerror = (e) => console.error("Error updating task: ", e)
         }
     }
     
     function searchTasks(searchParam: string) {
-        // TODO: Implement search tasks
         console.log("Search Param: ", searchParam)
     }
     
-    // Events
+    /* Event Listeners */
     formAdd.addEventListener("submit", (e) => {
         e.preventDefault()
         const inputValue = inputAdd.value.trim()
-        if (inputValue) {
-            saveTask(inputValue)
-        }
+        if (inputValue) saveTask(inputValue)
     })
     
     formEdit.addEventListener("submit", (e) => {
         e.preventDefault()
-        
         const inputValue = inputEdit.value.trim()
-        
-        if (inputValue) {
-            updateTask(inputValue)
-        }
-        
+        if (inputValue) updateTask(inputValue)
         showOrHideElements()
     })
     
-    btnCancel.addEventListener("click", () => {
-        showOrHideElements()
-    })
-    
-    btnSearchCancel.addEventListener("click", () => {
-        inputSearch.value = ""
-    })
+    btnCancel.addEventListener("click", showOrHideElements)
+    btnSearchCancel.addEventListener("click", () => inputSearch.value = "")
     
     list.addEventListener("click", (e) => {
         const targetEl = e.target as HTMLButtonElement
-        let taskId: string
+        if (targetEl.tagName.toLowerCase() === "i") targetEl.parentElement?.click()
         
-        if (targetEl.tagName.toLowerCase() === "i") {
-            targetEl.parentElement?.click()
-        }
+        const parentItemEl = targetEl.closest(".task-item") as HTMLLIElement
+        if (!parentItemEl) return
         
-        const parentEl = targetEl.parentElement as HTMLDivElement
-        const parentItemEl = parentEl.parentElement as HTMLLIElement
-        
-        if (parentItemEl?.classList.contains("task-item")) {
-            taskId = parentItemEl.id
-            
-            if (!taskId) {
-                console.error("Invalid task id: ", taskId)
-                return
-            }
-        }
+        const taskId = parentItemEl.id
+        if (!taskId) return console.error("Invalid task id: ", taskId)
         
         if (targetEl.classList.contains("mini-finish-btn")) {
-            const parentItemEl = parentEl.parentElement as HTMLLIElement
             parentItemEl.classList.toggle("done")
-            
-            taskId = parentItemEl.id
-            
             const store = getObjectStore(DB_STORE_NAME, "readwrite")
             const request = store.get(taskId)
             
             request.onsuccess = () => {
                 const task = request.result
-                
-                if (!task) {
-                    console.group("Error")
-                    console.error("Task not found: ", taskId)
-                    console.error("Error: ", e)
-                    console.groupEnd()
-                    return
-                }
+                if (!task) return console.error("Task not found: ", taskId)
                 
                 task.status = task.status === "pending" ? "done" : "pending"
-                
                 const updateRequest = store.put(task)
-                
-                updateRequest.onsuccess = () => {
-                    console.log("Task updated successfully!")
-                }
-                
-                updateRequest.onerror = (e) => {
-                    console.group("Error")
-                    console.error("Error updating task: ", taskId)
-                    console.error("Error: ", e)
-                }
+                updateRequest.onerror = (e) => console.error("Error updating task: ", e)
             }
             
-            request.onerror = (e) => {
-                console.group("Error")
-                console.error("Error fetching task: ", taskId)
-                console.error("Error: ", e)
-                console.groupEnd()
-            }
+            request.onerror = (e) => console.error("Error fetching task: ", e)
         }
         
         if (targetEl.classList.contains("mini-edit-btn")) {
             showOrHideElements()
-            
-            inputEdit.value = parentItemEl.querySelector(".task-text")?.textContent as string
-            editingTaskId = parentItemEl.id
-            
-            console.log("Editing Task Id: ", editingTaskId)
-            
+            inputEdit.value = parentItemEl.querySelector(".task-text")!.textContent!
+            editingTaskId = taskId
             inputEdit.focus()
         }
         
         if (targetEl.classList.contains("mini-remove-btn")) {
-            const parentItemEl = parentEl.parentElement as HTMLLIElement
             parentItemEl.remove()
         }
     })
     
     inputSearch.addEventListener("keyup", (e) => {
-        const target = e.target as HTMLInputElement
-        if (target) {
-            const searchParam = target.value.trim().toLowerCase()
-            searchTasks(searchParam)
-        }
-        
+        const searchParam = (e.target as HTMLInputElement).value.trim().toLowerCase()
+        searchTasks(searchParam)
     })
-    
-    request.onsuccess = () => {
-        DB = request.result
-        console.log(`Database ${ DB_NAME } opened successfully!`)
-        fetchAndRenderTasks()
-    }
 })()
