@@ -4,10 +4,12 @@ interface WordAndFrequency {
     [word: string]: number
 }
 
+type TaskStatus = "pending" | "done"
+
 interface Task {
     id: string
     task: string
-    status: string
+    status: TaskStatus
     createdAt: string
     wordFrequencies: WordAndFrequency
 }
@@ -47,7 +49,7 @@ let DB: IDBDatabase
     // const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search")!
     const inputSearch = document.querySelector<HTMLInputElement>("#inputSearch")!
     const btnSearchCancel = document.querySelector<HTMLButtonElement>("#btnSearchCancel")!
-    // const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter")!
+    const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter")!
     const list = document.querySelector<HTMLUListElement>("#taskr_list")!
     
     let editingTaskId: string
@@ -82,6 +84,8 @@ let DB: IDBDatabase
         const request = store.getAll()
         
         request.onsuccess = () => {
+            request.result.sort((a: Task, b: Task) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            while (list.firstChild) list.removeChild(list.firstChild)
             request.result.forEach((task: Task) => list.appendChild(itemFactory(task)))
         }
         
@@ -101,7 +105,8 @@ let DB: IDBDatabase
         
         const request = store.add(taskObj)
         
-        request.onsuccess = () => list.appendChild(itemFactory(taskObj))
+        request.onsuccess = () => list.prepend(itemFactory(taskObj))
+        
         request.onerror = (e) => console.error("Error adding task: ", e)
         
         inputAdd.value = ""
@@ -273,5 +278,30 @@ let DB: IDBDatabase
         e.preventDefault()
         const searchParam = (e.target as HTMLInputElement).value.trim().toLowerCase()
         searchTasks(searchParam)
+    })
+    
+    selectFilter.addEventListener("change", (e) => {
+        const filterValue = (e.target as HTMLSelectElement).value
+        const store = getObjectStore(DB_STORE_NAME, "readonly")
+        const index = store.index("status")
+        
+        switch (filterValue) {
+            case "pending":
+                index.getAll("pending").onsuccess = (e) => {
+                    list.innerHTML = ""
+                    const result = (e.target as IDBRequest).result
+                    result.forEach((task: Task) => list.appendChild(itemFactory(task)))
+                }
+                break
+            case "done":
+                index.getAll("done").onsuccess = (e) => {
+                    list.innerHTML = ""
+                    const result = (e.target as IDBRequest).result
+                    result.forEach((task: Task) => list.appendChild(itemFactory(task)))
+                }
+                break
+            default:
+                fetchAndRenderTasks()
+        }
     })
 })()
