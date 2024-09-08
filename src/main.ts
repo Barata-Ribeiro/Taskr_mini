@@ -1,9 +1,5 @@
 import "the-new-css-reset/css/reset.css"
 
-interface WordAndFrequency {
-    [word: string]: number
-}
-
 type TaskStatus = "pending" | "done"
 
 interface Task {
@@ -11,7 +7,6 @@ interface Task {
     task: string
     status: TaskStatus
     createdAt: string
-    wordFrequencies: WordAndFrequency
 }
 
 const DB_NAME = "taskr"
@@ -36,7 +31,6 @@ let DB: IDBDatabase
         store.createIndex("task", "task", { unique: false })
         store.createIndex("status", "status", { unique: false })
         store.createIndex("createdAt", "createdAt", { unique: false })
-        store.createIndex("wordFrequencies", "wordFrequencies", { unique: false })
     }
     
     /* DOM Elements */
@@ -46,7 +40,7 @@ let DB: IDBDatabase
     const formEdit = document.querySelector<HTMLFormElement>("#taskr_form-edit")!
     const inputEdit = document.querySelector<HTMLInputElement>("#inputEdit")!
     const btnCancel = document.querySelector<HTMLButtonElement>("#btnCancel")!
-    // const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search")!
+    const formSearch = document.querySelector<HTMLFormElement>("#taskr_form-search")!
     const inputSearch = document.querySelector<HTMLInputElement>("#inputSearch")!
     const btnSearchCancel = document.querySelector<HTMLButtonElement>("#btnSearchCancel")!
     const selectFilter = document.querySelector<HTMLSelectElement>("#selectFilter")!
@@ -57,26 +51,6 @@ let DB: IDBDatabase
     /* Functions */
     function getObjectStore(storeName: string, mode: IDBTransactionMode) {
         return DB.transaction(storeName, mode).objectStore(storeName)
-    }
-    
-    function calculateWordFrequencies(text: string): WordAndFrequency {
-        const words = text.toLowerCase().match(/\b\w+\b/g) ?? []
-        return words.reduce((acc, word) => {
-            acc[word] = (acc[word] ?? 0) + 1
-            return acc
-        }, {} as WordAndFrequency)
-    }
-    
-    function cosineSimilarity(doc: WordAndFrequency, query: WordAndFrequency) {
-        const intersection = Object.keys(doc).filter(word => word in query)
-        const dotProduct = intersection.reduce((acc, word) => acc + doc[word] * query[word], 0)
-        
-        const magnitudeDoc = Math.sqrt(Object.values(doc).reduce((acc, freq) => acc + freq ** 2, 0))
-        const magnitudeQuery = Math.sqrt(Object.values(query).reduce((acc, freq) => acc + freq ** 2, 0))
-        
-        if (magnitudeDoc === 0 || magnitudeQuery === 0) return 0
-        
-        return dotProduct / (magnitudeDoc * magnitudeQuery)
     }
     
     function fetchAndRenderTasks() {
@@ -100,7 +74,6 @@ let DB: IDBDatabase
             task: inputValue,
             status: "pending",
             createdAt: new Date().toISOString(),
-            wordFrequencies: calculateWordFrequencies(inputValue),
         }
         
         const request = store.add(taskObj)
@@ -169,7 +142,6 @@ let DB: IDBDatabase
             if (!result) return console.error("Task not found: ", editingTaskId)
             
             result.task = inputValue
-            result.wordFrequencies = calculateWordFrequencies(inputValue)
             const updateRequest = store.put(result)
             
             updateRequest.onsuccess = () => {
@@ -184,30 +156,27 @@ let DB: IDBDatabase
     
     function searchTasks(searchParam: string) {
         const store = getObjectStore(DB_STORE_NAME, "readonly")
-        const queryVector = calculateWordFrequencies(searchParam)
+        const index = store.index("task")
+        const results: Task[] = []
         
-        const results: { task: Task, similarity: number }[] = []
-        
-        const request = store.openCursor()
-        
-        request.onsuccess = (e) => {
+        index.openCursor().onsuccess = (e) => {
             const cursor = (e.target as IDBRequest).result
-            
             if (cursor) {
-                const task = cursor.value as Task
-                
-                const similarity = cosineSimilarity(task.wordFrequencies, queryVector)
-                if (similarity > 0) results.push({ task, similarity })
-                
+                if (cursor.value.task.toLowerCase().includes(searchParam)) results.push(cursor.value)
                 cursor.continue()
             } else {
                 list.innerHTML = ""
-                results.sort((a, b) => b.similarity - a.similarity)
-                results.forEach(({ task }) => list.appendChild(itemFactory(task)))
+                results.forEach((task: Task) => list.appendChild(itemFactory(task)))
+                
+                if (results.length === 0) {
+                    const noResults = document.createElement("li")
+                    noResults.textContent = "No results found."
+                    list.appendChild(noResults)
+                }
             }
         }
         
-        request.onerror = (e) => console.error("Error fetching tasks with cursor: ", e)
+        index.openCursor().onerror = (e) => console.error("Error searching tasks: ", e)
     }
     
     /* Event Listeners */
@@ -273,6 +242,8 @@ let DB: IDBDatabase
             request.onerror = (e) => console.error("Error deleting task: ", e)
         }
     })
+    
+    formSearch.addEventListener("submit", (e) => e.preventDefault())
     
     inputSearch.addEventListener("keyup", (e) => {
         e.preventDefault()
