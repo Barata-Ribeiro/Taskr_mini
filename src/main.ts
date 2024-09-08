@@ -58,7 +58,8 @@ let DB: IDBDatabase
         const request = store.getAll()
         
         request.onsuccess = () => {
-            request.result.sort((a: Task, b: Task) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            request.result.toSorted(
+                (a: Task, b: Task) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             while (list.firstChild) list.removeChild(list.firstChild)
             request.result.forEach((task: Task) => list.appendChild(itemFactory(task)))
         }
@@ -95,6 +96,8 @@ let DB: IDBDatabase
         const taskTitle = document.createElement("h3")
         taskTitle.className = "task-text"
         taskTitle.textContent = taskObj.task
+        taskTitle.title = taskObj.task
+        taskTitle.ariaLabel = taskObj.task
         item.appendChild(taskTitle)
         
         item.appendChild(itemActionsFactory())
@@ -261,14 +264,28 @@ let DB: IDBDatabase
                 index.getAll("pending").onsuccess = (e) => {
                     list.innerHTML = ""
                     const result = (e.target as IDBRequest).result
-                    result.forEach((task: Task) => list.appendChild(itemFactory(task)))
+                    if (result.length === 0) {
+                        const noResults = document.createElement("li")
+                        noResults.textContent = "No pending tasks."
+                        list.appendChild(noResults)
+                    }
+                    result.toSorted(
+                        (a: Task, b: Task) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                        .forEach((task: Task) => list.appendChild(itemFactory(task)))
                 }
                 break
             case "done":
                 index.getAll("done").onsuccess = (e) => {
                     list.innerHTML = ""
                     const result = (e.target as IDBRequest).result
-                    result.forEach((task: Task) => list.appendChild(itemFactory(task)))
+                    if (result.length === 0) {
+                        const noResults = document.createElement("li")
+                        noResults.textContent = "No pending tasks."
+                        list.appendChild(noResults)
+                    }
+                    result.toSorted(
+                        (a: Task, b: Task) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                        .forEach((task: Task) => list.appendChild(itemFactory(task)))
                 }
                 break
             default:
