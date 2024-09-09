@@ -280,7 +280,7 @@ let DB: IDBDatabase
                     const result = (e.target as IDBRequest).result
                     if (result.length === 0) {
                         const noResults = document.createElement("li")
-                        noResults.textContent = "No pending tasks."
+                        noResults.textContent = "No finished tasks."
                         list.appendChild(noResults)
                     }
                     result.toSorted(
