@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="474.12109"
+   height="146.01532"
+   viewBox="0 0 474.12109 146.01532"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1"
+     transform="translate(-18.939453,-212.85547)">
+    <path
+       id="text1"
+       style="font-weight:bold;font-size:147.636px;line-height:0.7;font-family:Roboto;-inkscape-font-specification:'Roboto, Bold';font-variant-ligatures:discretionary-ligatures;font-variant-caps:all-small-caps;letter-spacing:0px;word-spacing:0px;fill:#3600ad;fill-opacity:1;stroke-width:6.1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3;stroke-dashoffset:0.4;paint-order:markers fill stroke"
+       d="m 221.79492,212.85547 c -9.46754,0 -17.20557,2.3305 -23.21289,6.99219 -6.00732,4.66167 -9.01172,10.59785 -9.01172,17.80664 0,3.74856 0.60127,6.99113 1.80274,9.73047 1.20146,2.69127 3.05173,5.0702 5.55078,7.13671 2.49905,2.06652 5.67094,3.87034 9.51562,5.40821 3.89275,1.48982 8.6748,2.90631 14.34571,4.25195 5.6709,1.34564 9.68419,2.85896 12.03906,4.54102 2.35487,1.68204 3.53125,3.91768 3.53125,6.70507 0,2.54711 -1.10376,4.58909 -3.31445,6.12696 -2.16264,1.53787 -5.11863,2.30664 -8.86719,2.30664 -5.52674,0 -9.68526,-0.98468 -12.47266,-2.95508 -2.73934,-1.9704 -4.10742,-5.19071 -4.10742,-9.66016 H 186.6875 c 0,5.71897 1.51333,10.67047 4.54102,14.85157 3.07575,4.18109 7.42598,7.39944 13.04882,9.6582 5.62285,2.25875 11.91823,3.38867 18.88672,3.38867 10.23647,0 18.3095,-2.16301 24.22071,-6.48828 5.9112,-4.37333 8.86718,-10.30755 8.86718,-17.80469 0,-7.35296 -2.42733,-13.19231 -7.28125,-17.51758 -4.80585,-4.32526 -12.80626,-7.71307 -24.0039,-10.16406 -5.57479,-1.3937 -9.56387,-2.83635 -11.9668,-4.32617 -2.40292,-1.53787 -3.60547,-3.53144 -3.60547,-5.98242 0,-2.45099 1.15413,-4.49492 3.46094,-6.12891 2.30681,-1.63399 5.31121,-2.45117 9.01172,-2.45117 4.18109,0 7.49628,1.03504 9.94726,3.10156 2.49905,2.06652 3.74805,4.63715 3.74805,7.71289 h 20.83398 c 0,-8.12189 -3.1961,-14.5141 -9.58789,-19.17578 -6.34373,-4.70973 -14.68109,-7.06445 -25.01367,-7.06445 z m -202.855467,1.1543 v 16.86718 h 26.744141 v 67.11328 h 20.90625 v -67.11328 h 27.248047 v -16.86718 z m 110.509767,0 -33.232423,83.98046 h 20.906253 c 42.00641,-113.4734 -40.554884,109.27249 22.05859,-59.6875 20.5549,55.08833 7.71698,20.56575 22.34766,59.6875 h 21.04882 l -33.51953,-83.98046 z m 139.27344,0 v 83.98046 h 20.90625 v -22.3457 l 9.15625,-9.01172 20.40039,31.35742 h 24.65429 l -30.92578,-46.27929 30.13282,-37.70117 h -26.09571 l -20.25781,25.51757 -7.06445,9.51563 v -35.0332 z m 81.02734,0 v 83.98046 h 61.70703 V 281.26758 H 370.65625 V 263.0293 h 34.67383 v -16.79688 h -34.67383 v -15.35547 h 40.87305 v -16.86718 z m 71.15039,0 v 83.98046 h 20.90625 v -28.97851 h 13.04883 l 15.71484,28.97851 h 22.49024 v -0.86328 L 474.0293,263.46094 c 5.57478,-2.45099 9.58807,-5.59868 12.03906,-9.44336 2.49904,-3.89274 3.74805,-8.81808 3.74805,-14.77735 0,-8.02577 -2.97824,-14.22628 -8.9375,-18.59961 -5.95926,-4.42138 -14.27437,-6.63085 -24.94336,-6.63085 z m 20.90625,16.86718 h 13.55274 c 9.08307,0 13.625,3.53305 13.625,10.59766 -10e-6,7.16073 -4.35024,10.74023 -13.04883,10.74023 h -14.12891 z" />
+    <ellipse
+       style="fill:#00ae79;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:3;stroke-dasharray:none;stroke-dashoffset:0.4;stroke-opacity:1;paint-order:markers fill stroke"
+       id="path4"
+       cx="139.18164"
+       cy="283.06836"
+       rx="13.352193"
+       ry="13.333222" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:96px;line-height:0.7;font-family:Roboto;-inkscape-font-specification:'Roboto, Medium';font-variant-ligatures:discretionary-ligatures;font-variant-caps:all-small-caps;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#00ae79;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:3;stroke-dasharray:none;stroke-dashoffset:0.4;stroke-opacity:1;paint-order:markers fill stroke"
+       x="321.0293"
+       y="358.87079"
+       id="text4"><tspan
+         id="tspan4"
+         x="321.0293"
+         y="358.87079">Mini</tspan></text>
+  </g>
+</svg>

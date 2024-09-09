@@ -79,17 +79,16 @@ body {
 }
 
 header {
+    display: grid;
+    width: 100%;
     margin-bottom: 2rem;
+    border-bottom: 0.2rem solid rgba(255, 255, 255, 0.5);
 }
 
-header .title {
-    font-size: 3.6rem;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-
+header .logo {
+    margin: 0 auto;
+    height: clamp(6rem, 10vw, 10rem);
     padding-bottom: 1rem;
-    border-bottom: 0.2rem solid rgba(255, 255, 255, 0.5);
 }
 
 .toolbar_wrapper {
@@ -289,7 +288,7 @@ header .title {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    
+
     font-size: 1.8rem;
     font-weight: 500;
     line-height: 1;
